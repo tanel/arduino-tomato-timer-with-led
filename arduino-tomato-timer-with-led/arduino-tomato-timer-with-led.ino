@@ -13,8 +13,8 @@ const unsigned long MILLISECONDS = 1;
 const unsigned long SECONDS = 1000 * MILLISECONDS;
 const unsigned long MINUTES = 60 * SECONDS;
 
-const unsigned long TARGET_LONG = 25 * MINUTES;
-const unsigned long TARGET_SHORT = 10 * MINUTES;
+const unsigned long TARGET_LONG = 1 * MINUTES;
+const unsigned long TARGET_SHORT = 0.5 * MINUTES;
 
 unsigned long currentTargetMillis = TARGET_LONG;
 
@@ -23,6 +23,7 @@ unsigned long targetStartedAt = 0;
 void setup() {
   Serial.begin(9600);
   display.begin();
+  display.printTime(0, 0, false);
   display.setBacklight(100);
   delay(1000);
 
@@ -30,20 +31,33 @@ void setup() {
 }
 
 void loop() {
-  delay(1000);
-
   unsigned long spentMillis = millis() - targetStartedAt;
-  unsigned long neededMillis = currentTargetMillis - spentMillis;
+  long neededMillis = currentTargetMillis - spentMillis;
 
+  // switch to new target
+  if (neededMillis < 1) {
+    if (currentTargetMillis == TARGET_LONG) {
+      currentTargetMillis = TARGET_SHORT;
+    } else {
+      currentTargetMillis = TARGET_LONG;
+    }
+
+    targetStartedAt = millis();
+    return;
+  }
+
+  // display time left
   unsigned long seconds = neededMillis / 1000;
   unsigned long minutes = 0;
   if (seconds > 0) {
     minutes = seconds / 60;
   }
 
-  if (seconds > 60) {
+  if (seconds >= 60) {
     seconds = seconds - (minutes * 60);
   }
 
   display.printTime(minutes, seconds, false);
+
+  delay(1000);
 }
