@@ -13,8 +13,8 @@ const unsigned long MILLISECONDS = 1;
 const unsigned long SECONDS = 1000 * MILLISECONDS;
 const unsigned long MINUTES = 60 * SECONDS;
 
-const unsigned long TARGET_LONG = 1 * MINUTES;
-const unsigned long TARGET_SHORT = 0.5 * MINUTES;
+const unsigned long TARGET_LONG = 25 * MINUTES;
+const unsigned long TARGET_SHORT = 10 * MINUTES;
 
 unsigned long currentTargetMillis = TARGET_LONG;
 
